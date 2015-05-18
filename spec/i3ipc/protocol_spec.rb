@@ -4,7 +4,7 @@ module I3Ipc
   describe Protocol do
 
     before(:all) do
-      # open internal methods
+      # open internal methods for verification needs
       class Protocol
         public :pack, :unpack_header
       end
@@ -12,7 +12,7 @@ module I3Ipc
 
     before(:each, :i3 => :simulate) do
       @i3_srv = I3MockServer.new
-      subject # connecting with Protocol
+      subject.connect
       @i3_srv.accept_client
     end
 
@@ -21,33 +21,28 @@ module I3Ipc
       subject.disconnect
     end
 
-    subject do
-      allow_any_instance_of(Protocol)
-        .to receive(:socketpath)
-        .and_return(I3MockServer::SOCKET_PATH)
-      Protocol.new
-    end
+    subject { Protocol.new(I3MockServer::SOCKET_PATH) }
 
     it 'has MAGIC_STRING string constant' do
       expect(Protocol::MAGIC_STRING).to be_a String
     end
 
-    it 'is connected if server running', :i3 => :simulate do
-      expect(@i3_srv.client_alive?).to be true
-    end
+    describe '#connect' do
+      it 'fails to connect if server not running' do
+        expect { subject.connect }.to raise_error Errno::ECONNREFUSED
+      end
 
-    it 'fails to initialize if server not running' do
-      expect { subject }.to raise_error Errno::ECONNREFUSED
-    end
+      it 'connects if server running', :i3 => :simulate do
+        expect(@i3_srv.client_alive?).to be true
+      end
 
-    describe '#connect', :i3 => :simulate do
-      it 'reconnects if disconnected' do
+      it 'reconnects if disconnected', :i3 => :simulate do
         subject.disconnect
         subject.connect
         expect(@i3_srv.accept_client.client_alive?).to be true
       end
 
-      it 'does nothing if already connected' do
+      it 'does nothing if already connected', :i3 => :simulate do
         subject.connect
         expect(@i3_srv.accept_client).to be nil
         expect(@i3_srv.client_alive?).to be true
@@ -134,3 +129,4 @@ module I3Ipc
     end
   end
 end
+

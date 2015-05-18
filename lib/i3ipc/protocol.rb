@@ -45,9 +45,8 @@ module I3Ipc
     # on non-connected channel.
     class NotConnected < RuntimeError; end
 
-    def initialize()
-      @socketpath = socketpath
-      connect
+    def initialize(socketpath = nil)
+      @socketpath = socketpath ? socketpath : get_socketpath
     end
 
     # Connects to i3-ipc server socket using Socket::UNIXSocket.
@@ -124,7 +123,7 @@ module I3Ipc
       [magic_message, len, type]
     end
 
-    def socketpath
+    def get_socketpath
       path = `i3 --get-socketpath`.chomp!
       raise 'Unable to get i3 socketpath' unless path
       path
