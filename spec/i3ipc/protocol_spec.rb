@@ -29,7 +29,7 @@ module I3Ipc
 
     describe '#connect' do
       it 'fails to connect if server not running' do
-        expect { subject.connect }.to raise_error Errno::ECONNREFUSED
+        expect { subject.connect }.to raise_error Errno::ENOENT
       end
 
       it 'connects if server running', :i3 => :simulate do

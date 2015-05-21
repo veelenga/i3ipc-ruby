@@ -13,8 +13,8 @@ module I3Ipc
 
         it 'properly parses numeric attributes' do
           reply = Reply.parse(%Q[{ "int": 2, "float": 4.2 }])
-          expect(reply.int).to be 2
-          expect(reply.float).to be 4.2
+          expect(reply.int).to eql 2
+          expect(reply.float).to eql 4.2
         end
 
         it 'properly parses string attributes' do

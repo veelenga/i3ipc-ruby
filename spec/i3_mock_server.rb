@@ -8,7 +8,7 @@ module I3Ipc
     SOCKET_PATH = '/tmp/i3-mock-server.sock'
 
     def initialize
-      FileUtils.rm(SOCKET_PATH) if File.exist?(SOCKET_PATH)
+      remove_sock
       @server = UNIXServer.new(SOCKET_PATH)
     end
 
@@ -44,7 +44,14 @@ module I3Ipc
 
     def close
       close_client
-      @server.close
+      @server.close unless @server.closed?
+      remove_sock
+    end
+
+    private
+
+    def remove_sock
+      FileUtils.rm(SOCKET_PATH) if File.exist?(SOCKET_PATH)
     end
   end
 end
