@@ -62,6 +62,19 @@ module I3Ipc
       end
     end
 
+    describe '#success?' do
+      it 'returns true if response without error' do
+        reply = Reply.parse(%Q[{}])
+        expect(reply.success?).to be true
+      end
+
+      it 'returns false if response with error' do
+        reply = Reply.parse(%Q[{"error": "Wrong command"}])
+        expect(reply.success?).to be false
+        expect(reply.error).to eql 'Wrong command'
+      end
+    end
+
     describe '#to_h' do
       it 'converts it back to hash' do
         hash = {:f => 1, :a => 2, :inner => {:ar => [true, false, "v"]}}

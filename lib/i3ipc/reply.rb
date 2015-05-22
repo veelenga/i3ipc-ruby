@@ -52,7 +52,7 @@ module I3Ipc
     # meens that request is successful and reply has some
     # data.
     def success?
-      raise 'Not implemented yet'
+      not self.respond_to? :error
     end
 
     def method_missing(name, *args, &block)
