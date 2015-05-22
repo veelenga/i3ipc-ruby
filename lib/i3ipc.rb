@@ -1,5 +1,4 @@
-require "i3ipc/version"
-
-module I3ipc
-  # Your code goes here...
-end
+require 'i3ipc/version'
+require 'i3ipc/protocol'
+require 'i3ipc/reply'
+require 'i3ipc/connection'
