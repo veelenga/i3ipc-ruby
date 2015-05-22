@@ -56,6 +56,8 @@ module I3Ipc
       reply_for(7)
     end
 
+    private
+
     def reply_for(type, message = nil)
       @protocol.send(type, message)
       Reply.parse(@protocol.receive type)
