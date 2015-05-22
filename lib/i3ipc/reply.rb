@@ -73,7 +73,14 @@ module I3Ipc
     end
 
     def to_s
-      @data.to_json
+      JSON.pretty_generate(to_h)
+    end
+
+    def to_h
+      data = @data.dup
+      data.each do |k, v|
+        data[k] = Reply.unparse_data v
+      end
     end
 
     private
@@ -91,6 +98,18 @@ module I3Ipc
         return Reply.new(Hash[data.map {|k, v| [k.to_sym, v]}])
       else
         raise "Unable to parse data of type #{data.class}"
+      end
+    end
+
+    def self.unparse_data(data)
+      case data
+      when Numeric, String, TrueClass, FalseClass, NilClass
+        data
+      when Reply
+        data.to_h
+      when Array
+        data.map! {|x| self.unparse_data(x)}
+        data
       end
     end
   end

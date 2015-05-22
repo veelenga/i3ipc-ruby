@@ -22,20 +22,20 @@ module I3Ipc
         end
 
         it 'properly parses array of hashes' do
-          reply = Reply.parse( %Q[{ "data": [{"key1": true}, {"key2": false}] }])
-          expect(reply.data[0].key1).to be true
-          expect(reply.data[1].key2).to be false
+          reply = Reply.parse( %Q[{ "arr": [{"key1": true}, {"key2": false}] }])
+          expect(reply.arr[0].key1).to be true
+          expect(reply.arr[1].key2).to be false
         end
 
         it 'properly parses sub-hashes' do
-          reply = Reply.parse(%Q[{ "data":{ "key1": "val1", "key2": "val2"} }])
-          expect(reply.data.key1).to eql 'val1'
-          expect(reply.data.key2).to eql 'val2'
+          reply = Reply.parse(%Q[{ "ha":{ "key1": "val1", "key2": "val2"} }])
+          expect(reply.ha.key1).to eql 'val1'
+          expect(reply.ha.key2).to eql 'val2'
         end
 
         it 'properly parses sub-arrays' do
-          reply = Reply.parse(%Q[{ "data": [[ 1, 2 ]] }])
-          expect(reply.data[0]).to match_array [1, 2]
+          reply = Reply.parse(%Q[{ "arr": [[ 1, 2 ]] }])
+          expect(reply.arr[0]).to match_array [1, 2]
         end
 
         it 'properly parses empty array' do
@@ -47,7 +47,7 @@ module I3Ipc
         it 'property parses empty hash' do
           reply = Reply.parse(%Q[{"ha": {}}]);
           expect(reply.ha).to be_a Reply
-          expect(reply.ha.to_s).to eq '{}'
+          expect(reply.ha.to_s).to eq "{\n}"
         end
 
         it 'returns new Reply object' do
@@ -62,11 +62,18 @@ module I3Ipc
       end
     end
 
+    describe '#to_h' do
+      it 'converts it back to hash' do
+        hash = {:f => 1, :a => 2, :inner => {:ar => [true, false, "v"]}}
+        reply = Reply.parse(hash.to_json)
+        expect(reply.to_h). to eql hash
+      end
+    end
+
     describe '#to_s' do
-      it 'returns #to_json called on passed data' do
-        hash = {:one => 'one', :two => 'two'}
-        reply = Reply.new(hash)
-        expect(reply.to_s).to eql hash.to_json
+      it 'returns property formatter structure with hash, arrays and primitives' do
+        reply = Reply.parse(%Q[{"d":{"1":[{"k":"v"}]} }])
+        expect(reply.to_s).to eql "{\n  \"d\": {\n    \"1\": [\n      {\n        \"k\": \"v\"\n      }\n    ]\n  }\n}"
       end
     end
 
