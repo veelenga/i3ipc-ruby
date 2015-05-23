@@ -1,5 +1,18 @@
 # I3ipc [![Gem Version](https://badge.fury.io/rb/i3ipc.svg)](https://rubygems.org/gems/i3ipc) [![Build Status](https://api.travis-ci.org/veelenga/i3ipc-ruby.svg?branch=master)](https://travis-ci.org/veelenga/i3ipc-ruby)
 
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Command](#command)
+  - [Workspaces](#workspaces)
+  - [Subscribe](#subscribe)
+  - [Outputs](#outputs)
+  - [Tree](#tree)
+  - [Marks](#marks)
+  - [Bar config](#bar-config)
+  - [Version](#version)
+- [Contributing](#contributing)
+
+
 An improved Ruby library to control [i3wm](http://i3wm.org/).
 
 i3's interprocess communication (or [ipc](http://i3wm.org/docs/ipc.html)) is the interface i3 wm uses to receive commands from the clients. It also features a publish/subscribe mechanism for notifying interested parties of window manager events.
@@ -30,7 +43,7 @@ i3.close
 
 Below you can find examples of usage some replies from local i3 wm. Output depend on my config and will be different in other env. A list of messages to send and replies you can find in [Receiving replies from i3](https://i3wm.org/docs/ipc.html#_receiving_replies_from_i3).
 
-Each reply from i3 wm will be parsed and packed in a special object. That object responds to any method with a name of an original name of i3 wm attribute in the reply (yes, **method_missing** involved here). So you can access attributes in very useful way. Find examples below.
+Each reply from i3 wm will be parsed and packed in a special object. That object responds to any method with a name of an original name of i3 wm attribute in the reply. So you can access attributes in a very useful way. Find examples below.
 
 ### Command
 
