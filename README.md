@@ -17,7 +17,7 @@ An improved Ruby library to control [i3wm](http://i3wm.org/).
 
 i3's interprocess communication (or [ipc](http://i3wm.org/docs/ipc.html)) is the interface i3 wm uses to receive commands from the clients. It also features a publish/subscribe mechanism for notifying interested parties of window manager events.
 
-This gem will be useful for example for controlling i3 windows manager or to get various information like the current workspaces or to implemennt external workspace bar in `Ruby` language.
+This gem will be useful for example for controlling i3 windows manager or to get various information like the current workspaces or to implement external workspace bar in `Ruby` language.
 
 Inspired by [i3ipc-python](https://github.com/acrisci/i3ipc-python), [i3ipc-gjs](https://github.com/acrisci/i3ipc-gjs), [i3ipc-lua](https://github.com/acrisci/i3ipc-lua) and reworked mainly from [i3-ipc](https://github.com/badboy/i3-ipc) (thanks to [@badboy](https://github.com/badboy) for this gem).
 
