@@ -2,16 +2,16 @@ require 'socket'
 
 module I3Ipc
   # Communication interface with i3-ipc.
-  #
   # Can connect to i3-ipc socket, disconnect, send and receive messages.
   #
-  # Usage example:
+  # For i3-ipc interface details refer to https://i3wm.org/docs/ipc.html.
+  #
+  # @example
   #   protocol = Protocol.new
   #   protocol.send(7)
   #   puts protocol.receive
   #   protocol.disconnect
   #
-  # For i3-ipc interface details refer to https://i3wm.org/docs/ipc.html.
   class Protocol
     # Magic string for i3-ipc protocol to ensure the integrity of messages.
     MAGIC_STRING = 'i3-ipc'
@@ -49,7 +49,7 @@ module I3Ipc
       @socketpath = socketpath ? socketpath : get_socketpath
     end
 
-    # Connects to i3-ipc server socket using Socket::UNIXSocket.
+    # Connects to i3-ipc server socket using {::UNIXSocket}.
     # Does nothing if already connected.
     def connect
       @socket = UNIXSocket.new(@socketpath) unless @socket
@@ -63,12 +63,10 @@ module I3Ipc
     end
 
     # Sends packed message to i3-ipc server socket.
+    # @param [Integer] type type of the message.
+    # @param [String] payload message payload.
     #
-    # Throws:
-    # * NotConnected if protocol is not connected.
-    #
-    # +type+: type of the message.
-    # +payload+: payload of the message
+    # @raise [NotConnected] if protocol is not connected.
     def send(type, payload = nil)
       check_connected
       @socket.write(pack(type, payload))
@@ -76,12 +74,13 @@ module I3Ipc
 
     # Receives message from i3-ipc server socket.
     #
-    # Throws:
-    # * NotConnected if protocol is not connected.
-    # * WrongMagicString if got message with not expected magic string.
-    # * WrongType if got message with not expected magic type.
+    # @param [Integer] type expected type of the message.
     #
-    # +type+: expected type of the message.
+    # @return [String] unpacked response from i3 server.
+    #
+    # @raise [NotConnected] if protocol is not connected.
+    # @raise [WrongMagicString] if got message with wrong magic string.
+    # @raise [WrongType] if got message with not expected type.
     def receive(type = nil)
       check_connected
       # length of "i3-ipc" + 4 bytes length + 4 bytes type
@@ -98,12 +97,14 @@ module I3Ipc
 
     # Packs the message.
     # A typical message looks like:
+    # @example
     #   <header><payload>
     # where a header is:
+    # @example
     #   <magic string><message length><message type>
     #
-    # +type+: type of the message
-    # +payload+: patload of the message
+    # @param [Integer] type type of the message.
+    # @param [String] payload payload of the message.
     def pack(type, payload=nil)
       size = payload ? payload.to_s.bytes.count : 0
       msg = MAGIC_STRING + [size, type].pack("LL")
@@ -113,9 +114,10 @@ module I3Ipc
 
     # Unpacks the header.
     # A typical header looks like:
+    # @example
     #   <magic_string><message length><message type>
     #
-    # +data+: data to be unpacked.
+    # @param [String] data: data to be unpacked.
     def unpack_header(data)
       struct_header_len = MAGIC_STRING.size
       magic_message = data[0, struct_header_len]

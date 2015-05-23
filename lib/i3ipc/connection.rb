@@ -6,7 +6,7 @@ module I3Ipc
   # Able to send/receive messages and convert
   # responses.
   #
-  # Usage example:
+  # @example
   #   con = Connection.new
   #   p con.version.human_readable         # => 4.10.2 (2015-0...
   #   p con.command('focus left').success? # => true

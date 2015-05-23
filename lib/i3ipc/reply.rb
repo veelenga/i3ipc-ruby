@@ -3,12 +3,10 @@ require 'json'
 module I3Ipc
   # Wrapper for reply from i3-ipc.
   #
-  # Represents response from i3 as object tree.
-  #
   # Able to parse Numeric, String, TrueClass, FalseClass,
-  # Array, Hash from passed JSON string.
+  # Array, Hash from passed string in json format.
   #
-  # For example:
+  # @example
   #  response = Reply.parse(
   #   %Q{
   #      {
@@ -40,17 +38,18 @@ module I3Ipc
 
     # Parses response from I3-ipc protocol.
     #
-    # Returns Reply object with dynamically accessed values.
+    # @param [String] response response from i3 in json format.
     #
-    # +response+: string, that represents response from i3 in json format.
+    # @return [Reply] object with dynamically accessed values.
     def self.parse(response)
       parse_data JSON.parse(response)
     end
 
-    # Returns false if this reply represents and error
-    # from i3-ipc protocol. Otherwise returns true, which
-    # meens that request is successful and reply has some
-    # data.
+    # Indicates whether this reply success or not.
+    #
+    # @return false if this reply represents and error from i3-ipc protocol.
+    #   Otherwise returns true, which means that request is successful and
+    #   reply has some data.
     def success?
       not self.respond_to? :error
     end
