@@ -106,7 +106,7 @@ killed.
 
 ```ruby
 block = Proc.new do |reply|
-  if(reply.change == 'title')
+  if reply.change == 'title'
     puts "title changed for window #{reply.container.name}"
   end
 end
@@ -114,6 +114,9 @@ end
 pid = i3.subscribe('window', block)
 pid.join
 ```
+
+It is recommended to use separate `Connection`s for each subscription,
+since replies to subscription events may be sent by i3 at any time.
 
 ### Outputs
 
