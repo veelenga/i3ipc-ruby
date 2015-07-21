@@ -53,7 +53,9 @@ module I3Ipc
 
       # Send subscription request
       @protocol.send(2, [event])
-      Reply.parse(@protocol.receive 2)
+
+      reply = Reply.parse(@protocol.receive 2)
+      raise WrongEvent.new(event) unless reply["success"]
 
       pid = Thread.new do
         while true
