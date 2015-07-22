@@ -29,14 +29,14 @@ module I3Ipc
 
     def initialize(connect = true)
       @protocol = Protocol.new
-      connect && @protocol.connect
+      open
     end
 
-    def connect
+    def open
       @protocol.connect
     end
 
-    def disconnect
+    def close
       @protocol.disconnect
     end
 
