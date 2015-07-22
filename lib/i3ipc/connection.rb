@@ -55,7 +55,7 @@ module I3Ipc
       @protocol.send(2, [event])
 
       reply = Reply.parse(@protocol.receive 2)
-      raise WrongEvent.new(event) unless reply["success"]
+      raise WrongEvent.new(event) unless reply.success?
 
       pid = Thread.new do
         while true
