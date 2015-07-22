@@ -93,6 +93,30 @@ module I3Ipc
       @socket.read(len)
     end
 
+    # Receives event from i3-ipc server socket.
+    #
+    # @param [Integer] type expected type of the message.
+    #
+    # @return [String] unpacked response from i3 server.
+    #
+    # @raise [NotConnected] if protocol is not connected.
+    # @raise [WrongMagicString] if got message with wrong magic string.
+    # @raise [WrongType] if got message with not expected type.
+    def receive_event(type = nil)
+      check_connected
+      # length of "i3-ipc" + 4 bytes length + 4 bytes type
+      data = @socket.read 14
+      magic, len, recv_type = unpack_header(data)
+
+      # Strip highest bit
+      recv_type = recv_type & 2147483647
+
+      raise WrongMagicString.new(magic) unless MAGIC_STRING.eql? magic
+      type && (raise WrongType.new(type, recv_type) unless type == recv_type)
+
+      @socket.read(len)
+    end
+
     private
 
     # Packs the message.

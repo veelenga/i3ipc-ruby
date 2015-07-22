@@ -98,7 +98,25 @@ Reply consists of a list of workspaces. Each workspace has some properties:
 
 ### Subscribe
 
-To be done (not implemented yet)
+Takes an [event](http://i3wm.org/docs/ipc.html#_available_events) and
+a Proc object. The Proc object will be called with i3's response
+whenever i3 generates the specified event. `subscribe` returns a
+Thread; the block will execute in this thread until the thread is
+killed.
+
+```ruby
+block = Proc.new do |reply|
+  if reply.change == 'title'
+    puts "title changed for window #{reply.container.name}"
+  end
+end
+
+pid = i3.subscribe('window', block)
+pid.join
+```
+
+It is recommended to use separate `Connection`s for each subscription,
+since replies to subscription events may be sent by i3 at any time.
 
 ### Outputs
 
