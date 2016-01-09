@@ -27,9 +27,9 @@ module I3Ipc
   #   con.close
   class Connection
 
-    def initialize(connect = true)
-      @protocol = Protocol.new
-      open
+    def initialize(protocol = Protocol.new, autoconnect = true)
+      @protocol = protocol
+      open if autoconnect
     end
 
     def open
@@ -106,6 +106,5 @@ module I3Ipc
       else raise WrongEvent.new(event)
       end
     end
-
   end
 end

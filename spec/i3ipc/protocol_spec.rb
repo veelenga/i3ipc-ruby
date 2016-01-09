@@ -87,7 +87,7 @@ module I3Ipc
 
       it 'throws error if not connected' do
         subject.disconnect
-        expect { subject.send(type) }.to raise_error
+        expect { subject.send(type) }.to raise_error Protocol::NotConnected
       end
     end
 
