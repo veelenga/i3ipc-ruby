@@ -45,7 +45,7 @@ module I3Ipc
       parse_data JSON.parse(response)
     end
 
-    # Indicates whether this reply success or not.
+    # Indicates whether this reply is successful or not.
     #
     # @return false if this reply represents and error from i3-ipc protocol.
     #   Otherwise returns true, which means that request is successful and
