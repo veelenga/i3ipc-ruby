@@ -150,16 +150,21 @@ module I3Ipc
     end
 
     def get_socketpath
-      cmd = if system('i3 --version')
-        'i3'
-      elsif system('sway --version')
-        'sway'
+      if !ENV['I3SOCK'].nil?
+        ENV['I3SOCK']
       else
-        raise 'Unable to find i3 compatible window manager'
+        cmd = if system('i3 --version')
+          'i3'
+        elsif system('sway --version')
+          'sway'
+        else
+          raise 'Unable to find i3 compatible window manager'
+        end
+
+        path = `#{cmd} --get-socketpath`.chomp!
+        raise 'Unable to get i3 compatible socketpath' unless path
+        path
       end
-      path = `#{cmd} --get-socketpath`.chomp!
-      raise 'Unable to get i3 compatible socketpath' unless path
-      path
     end
 
     def check_connected
